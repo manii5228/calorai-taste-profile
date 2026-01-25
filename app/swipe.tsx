@@ -11,6 +11,7 @@ import Animated, {
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import { useRouter } from 'expo-router';
 import SwipeActions from '../components/SwipeActions';
+import SwipeIndicator from '../components/SwipeIndicator';
 import { foods } from '../constants/foods';
 import SwipeCard from '../components/SwipeCard';
 import ProgressBar from '../components/ProgressBar';
@@ -29,6 +30,7 @@ export default function SwipeScreen() {
 
   const translateX = useSharedValue(0);
   const translateY = useSharedValue(0);
+  const swipeDirection = useSharedValue<'left' | 'right' | 'up' | 'down' | 'none'>('none');
   const router = useRouter();
   const handleFinish = (
     finalLikes: number[],
@@ -99,8 +101,33 @@ export default function SwipeScreen() {
     .onUpdate(e => {
       translateX.value = e.translationX;
       translateY.value = e.translationY;
+
+      // Determine swipe direction
+      const absX = Math.abs(e.translationX);
+      const absY = Math.abs(e.translationY);
+
+      if (absX > absY) {
+        // Horizontal swipe
+        if (e.translationX > 50) {
+          swipeDirection.value = 'right';
+        } else if (e.translationX < -50) {
+          swipeDirection.value = 'left';
+        } else {
+          swipeDirection.value = 'none';
+        }
+      } else {
+        // Vertical swipe
+        if (e.translationY > 50) {
+          swipeDirection.value = 'down';
+        } else if (e.translationY < -50) {
+          swipeDirection.value = 'up';
+        } else {
+          swipeDirection.value = 'none';
+        }
+      }
     })
     .onEnd(() => {
+      swipeDirection.value = 'none';
       if (translateX.value > SWIPE_THRESHOLD) swipeRight();
       else if (translateX.value < -SWIPE_THRESHOLD) swipeLeft();
       else if (translateY.value > SWIPE_VERTICAL_THRESHOLD) swipeDown();
@@ -147,6 +174,9 @@ export default function SwipeScreen() {
       <ProgressBar progress={index / foods.length} />
 
       <View style={styles.cardWrapper}>
+        {/* Swipe Indicators */}
+        <SwipeIndicator direction={swipeDirection} />
+
         {foods[index] && (
           <GestureDetector gesture={panGesture}>
             <Animated.View style={animatedStyle}>

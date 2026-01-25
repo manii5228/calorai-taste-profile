@@ -1,1 +1,1 @@
-export { foods } from './foods.json';
+export { foods, cuisines } from './foods.json';

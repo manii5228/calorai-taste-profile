@@ -1,9 +1,11 @@
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Dimensions } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { foods as foodsData } from '../constants/foods';
+import { foods as foodsData, cuisines as cuisinesData } from '../constants/foods';
 import GlassView from '../components/GlassView';
 import ItemCarousel from '../components/ItemCarousel';
 import { useState } from 'react';
+import { buildTasteProfile } from '../utils/tasteProfiler';
+import { getDietType, getLifestyleHighlights, getTopCuisines } from '../utils/insigths';
 
 const { width } = Dimensions.get('window');
 
@@ -14,6 +16,7 @@ export default function ResultsScreen() {
 
   // Handle foods being either array or object with foods property
   const foods = Array.isArray(foodsData) ? foodsData : (foodsData as any).foods || [];
+  const cuisines = Array.isArray(cuisinesData) ? cuisinesData : (cuisinesData as any).cuisines || [];
 
   const likedIds: number[] = likes ? JSON.parse(likes as string) : [];
   const dislikedIds: number[] = dislikes ? JSON.parse(dislikes as string) : [];
@@ -24,6 +27,13 @@ export default function ResultsScreen() {
   const dislikedFoods = foods.filter((f: any) => dislikedIds.includes(f.id));
   const notSureFoods = foods.filter((f: any) => notSureIds.includes(f.id));
   const superLikeFoods = foods.filter((f: any) => superLikeIds.includes(f.id));
+
+  // Build taste profile using utility function
+  const profile = buildTasteProfile(foods, likedIds, superLikeIds, notSureIds, cuisines);
+  const dietType = getDietType(profile.tagScores);
+  const highlights = getLifestyleHighlights(profile.tagScores);
+  const topCuisineNames = getTopCuisines(profile.cuisineScores);
+  const topCuisines = cuisines.filter((c: any) => topCuisineNames.includes(c.name));
 
   // Get top categories for highlights
   const getTopCategories = () => {
@@ -48,9 +58,11 @@ export default function ResultsScreen() {
       fruits: '🍎',
       grains: '🌾',
       proteins: '🍗',
+      protein: '🍗',
       dairy: '🥛',
       oils: '🫗',
       spices: '🌶️',
+      carb: '🌾',
     };
     return emojiMap[category.toLowerCase()] || '🍽️';
   };
@@ -96,37 +108,50 @@ export default function ResultsScreen() {
         {/* Title */}
         <Text style={styles.title}>Your Taste Profile</Text>
 
-        {/* SECTION 2: Key Highlights - Horizontal Carousel */}
-        {topCategories.length > 0 && (
-          <View style={styles.highlightsSection}>
-            <Text style={styles.sectionTitle}>Key Highlights</Text>
-            <ScrollView
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              scrollEventThrottle={16}
-              style={styles.highlightsCarousel}
-            >
-              {topCategories.map((cat, idx) => (
-                <View key={idx} style={styles.highlightItem}>
-                  <Text style={styles.highlightEmoji}>{cat.emoji}</Text>
-                  <Text style={styles.highlightLabel}>{cat.name}</Text>
-                </View>
-              ))}
-            </ScrollView>
-          </View>
-        )}
+        {/* SECTION 1: Key Highlights - Horizontal Carousel (Diet + Cuisines + Categories) */}
+        <View style={styles.highlightsSection}>
+          <Text style={styles.sectionTitle}>Key Highlights</Text>
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            scrollEventThrottle={16}
+            style={styles.highlightsCarousel}
+          >
+            {/* Diet Type Item */}
+            <View style={styles.highlightItem}>
+              <View style={styles.dietBadge}>
+                <Text style={styles.dietBadgeText}>{dietType}</Text>
+              </View>
+              <Text style={styles.highlightLabel}>Diet Style</Text>
+            </View>
 
-        {/* SECTION 3: Lifestyle & Goals */}
-        {lifestyleGoals.length > 0 && (
+            {/* Cuisines Items */}
+            {topCuisines.map((cuisine: any) => (
+              <View key={`cuisine-${cuisine.id}`} style={styles.highlightItem}>
+                <Text style={styles.highlightEmoji}>{cuisine.emoji}</Text>
+                <Text style={styles.highlightLabel}>{cuisine.name}</Text>
+              </View>
+            ))}
+
+            {/* Food Categories Items */}
+            {topCategories.map((cat, idx) => (
+              <View key={`cat-${idx}`} style={styles.highlightItem}>
+                <Text style={styles.highlightEmoji}>{cat.emoji}</Text>
+                <Text style={styles.highlightLabel}>{cat.name}</Text>
+              </View>
+            ))}
+          </ScrollView>
+        </View>
+
+        {/* SECTION 2: Taste Highlights */}
+        {highlights.length > 0 && (
           <View style={styles.lifestyleSection}>
-            <GlassCard title="Lifestyle & Goals">
+            <GlassCard title="Taste Highlights">
               <View style={styles.goalsContainer}>
-                {lifestyleGoals.map((goal, idx) => (
-                  <View key={idx} style={styles.goalItem}>
-                    <View style={styles.goalCheckmark}>
-                      <Text style={styles.goalCheckmarkText}>✓</Text>
-                    </View>
-                    <Text style={styles.goalText}>{goal}</Text>
+                {highlights.map((highlight, idx) => (
+                  <View key={idx} style={styles.highlightListItem}>
+                    <Text style={styles.bullet}>•</Text>
+                    <Text style={styles.highlightListText}>{highlight}</Text>
                   </View>
                 ))}
               </View>
@@ -269,6 +294,41 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     marginBottom: 12,
   },
+  dietTypeText: {
+    fontSize: 22,
+    fontWeight: '700',
+    color: '#FFFFFF',
+  },
+  dietBadge: {
+    backgroundColor: '#22C55E',
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 8,
+  },
+  dietBadgeText: {
+    fontSize: 16,
+    fontWeight: '700',
+    color: '#FFFFFF',
+  },
+  cuisinesRow: {
+    flexDirection: 'row',
+    gap: 20,
+  },
+  cuisineItem: {
+    alignItems: 'center',
+  },
+  cuisineEmoji: {
+    fontSize: 36,
+    marginBottom: 6,
+  },
+  cuisineLabel: {
+    color: '#E5E7EB',
+    fontSize: 14,
+    fontWeight: '500',
+  },
   highlightsSection: {
     marginBottom: 24,
   },
@@ -322,6 +382,20 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: '500',
     color: '#E5E7EB',
+  },
+  highlightListItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 8,
+  },
+  bullet: {
+    color: '#22C55E',
+    marginRight: 8,
+    fontSize: 18,
+  },
+  highlightListText: {
+    color: '#E5E7EB',
+    fontSize: 15,
   },
   categoryCarouselWrapper: {
     marginBottom: 80,
