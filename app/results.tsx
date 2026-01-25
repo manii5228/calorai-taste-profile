@@ -25,18 +25,49 @@ export default function ResultsScreen() {
   const notSureFoods = foods.filter((f: any) => notSureIds.includes(f.id));
   const superLikeFoods = foods.filter((f: any) => superLikeIds.includes(f.id));
 
-  // Get top category preference
-  const getTopCategory = () => {
-    const allFoods = [...likedFoods];
+  // Get top categories for highlights
+  const getTopCategories = () => {
     const categoryMap: Record<string, number> = {};
-    allFoods.forEach((f: any) => {
-      categoryMap[f.category] = (categoryMap[f.category] || 0) + 1;
+    foods.forEach((f: any) => {
+      if (likedIds.includes(f.id)) {
+        categoryMap[f.category] = (categoryMap[f.category] || 0) + 1;
+      }
     });
-    const topCat = Object.entries(categoryMap).sort((a, b) => b[1] - a[1])[0];
-    return topCat ? { name: topCat[0].charAt(0).toUpperCase() + topCat[0].slice(1), count: topCat[1] } : { name: 'N/A', count: 0 };
+    return Object.entries(categoryMap)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 5)
+      .map(([cat, count]) => ({
+        name: cat.charAt(0).toUpperCase() + cat.slice(1),
+        emoji: getEmojiForyCategory(cat),
+      }));
   };
 
-  const topCategory = getTopCategory();
+  const getEmojiForyCategory = (category: string) => {
+    const emojiMap: Record<string, string> = {
+      vegetables: '🥬',
+      fruits: '🍎',
+      grains: '🌾',
+      proteins: '🍗',
+      dairy: '🥛',
+      oils: '🫗',
+      spices: '🌶️',
+    };
+    return emojiMap[category.toLowerCase()] || '🍽️';
+  };
+
+  const topCategories = getTopCategories();
+
+  // Lifestyle goals (derived from preferences)
+  const lifestyleGoals = [];
+  if (superLikeFoods.length > 5) lifestyleGoals.push('Active');
+  if (likedFoods.length > 6) lifestyleGoals.push('Fitness Focused');
+  if (notSureFoods.length > 3) lifestyleGoals.push('Experimental');
+  if (dislikedFoods.length > 4) lifestyleGoals.push('Picky Eater');
+  if (likedFoods.some((f: any) => f.category === 'vegetables')) lifestyleGoals.push('Health Conscious');
+
+  if (lifestyleGoals.length === 0) {
+    lifestyleGoals.push('Food Explorer', 'Balanced Diet');
+  }
 
   const categories = [
     { id: 0, name: '♥ Foods You Love', emoji: '♥', items: likedFoods, icon: 'heart' },
@@ -54,84 +85,107 @@ export default function ResultsScreen() {
  
 
   return (
-    <ScrollView style={styles.container} contentContainerStyle={styles.content}>
+    <View style={styles.container}>
       <View style={styles.logoContainer}>
         <View style={styles.beatsLogo} />
       </View>
 
-      <Text style={styles.title}>Your Taste Profile</Text>
+      {/* MAIN SCROLL VIEW FOR ALL CONTENT */}
+      <ScrollView style={styles.mainScroll} showsVerticalScrollIndicator={false}>
+        
+        {/* Title */}
+        <Text style={styles.title}>Your Taste Profile</Text>
 
-      {/* Summary Stats */}
-      <GlassCard title="Summary">
-        <View style={styles.statsGrid}>
-          <View style={styles.statItem}>
-            <Text style={styles.statValue}>{superLikeFoods.length}</Text>
-            <Text style={styles.statLabel}>Super Likes</Text>
+        {/* SECTION 2: Key Highlights - Horizontal Carousel */}
+        {topCategories.length > 0 && (
+          <View style={styles.highlightsSection}>
+            <Text style={styles.sectionTitle}>Key Highlights</Text>
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              scrollEventThrottle={16}
+              style={styles.highlightsCarousel}
+            >
+              {topCategories.map((cat, idx) => (
+                <View key={idx} style={styles.highlightItem}>
+                  <Text style={styles.highlightEmoji}>{cat.emoji}</Text>
+                  <Text style={styles.highlightLabel}>{cat.name}</Text>
+                </View>
+              ))}
+            </ScrollView>
           </View>
-          <View style={styles.statItem}>
-            <Text style={styles.statValue}>{likedFoods.length}</Text>
-            <Text style={styles.statLabel}>Likes</Text>
-          </View>
-          <View style={styles.statItem}>
-            <Text style={styles.statValue}>{notSureFoods.length}</Text>
-            <Text style={styles.statLabel}>Not Sure</Text>
-          </View>
-          <View style={styles.statItem}>
-            <Text style={styles.statValue}>{dislikedFoods.length}</Text>
-            <Text style={styles.statLabel}>Dislikes</Text>
-          </View>
-        </View>
-        <View style={styles.divider} />
-        <View style={styles.topCategory}>
-          <Text style={styles.topCategoryLabel}>Top Category</Text>
-          <Text style={styles.topCategoryName}>{topCategory.name}</Text>
-          <Text style={styles.topCategoryCount}>{topCategory.count} items</Text>
-        </View>
-      </GlassCard>
+        )}
 
-      {/* Category Carousel Slider */}
-      <ScrollView
-        horizontal
-        pagingEnabled
-        showsHorizontalScrollIndicator={false}
-        scrollEventThrottle={16}
-        onScroll={handleScroll}
-        style={styles.categoryCarousel}
-      >
-        {categories.map((category) => (
-          <View key={category.id} style={{ width: width - 40 }}>
-            {category.items.length > 0 ? (
-              <ItemCarousel
-                title={category.name}
-                emoji={category.emoji}
-                items={category.items}
-                iconType={category.icon as 'heart' | 'checkmark' | 'cross'}
-              />
-            ) : (
-              <View style={styles.emptyState}>
-                <Text style={styles.emptyStateText}>
-                  No items in this category
-                </Text>
+        {/* SECTION 3: Lifestyle & Goals */}
+        {lifestyleGoals.length > 0 && (
+          <View style={styles.lifestyleSection}>
+            <GlassCard title="Lifestyle & Goals">
+              <View style={styles.goalsContainer}>
+                {lifestyleGoals.map((goal, idx) => (
+                  <View key={idx} style={styles.goalItem}>
+                    <View style={styles.goalCheckmark}>
+                      <Text style={styles.goalCheckmarkText}>✓</Text>
+                    </View>
+                    <Text style={styles.goalText}>{goal}</Text>
+                  </View>
+                ))}
               </View>
-            )}
+            </GlassCard>
           </View>
-        ))}
+        )}
+
+        {/* SECTION 4: Food Categories Carousel */}
+        <Text style={styles.sectionTitle}>Foods You Love</Text>
+        <View style={styles.categoryCarouselWrapper}>
+          <ScrollView
+            horizontal
+            pagingEnabled
+            showsHorizontalScrollIndicator={false}
+            scrollEventThrottle={16}
+            onScroll={handleScroll}
+            style={styles.categoryCarousel}
+            scrollEnabled={true}
+            decelerationRate="fast"
+            snapToInterval={width - 40}
+            snapToAlignment="center"
+          >
+            {categories.map((category) => (
+              <View key={category.id} style={[styles.categorySlide, { width: width - 40 }]}>
+                {category.items.length > 0 ? (
+                  <ItemCarousel
+                    title={category.name}
+                    emoji={category.emoji}
+                    items={category.items}
+                    iconType={category.icon as 'heart' | 'checkmark' | 'cross'}
+                  />
+                ) : (
+                  <View style={styles.emptyState}>
+                    <Text style={styles.emptyStateText}>
+                      No items in this category
+                    </Text>
+                  </View>
+                )}
+              </View>
+            ))}
+          </ScrollView>
+
+          {/* Category Dots */}
+          <View style={styles.categoryDotsContainer}>
+            {categories.map((_, index) => (
+              <View
+                key={index}
+                style={[
+                  styles.categoryDot,
+                  activeCategory === index && styles.activeCategoryDot,
+                ]}
+              />
+            ))}
+          </View>
+        </View>
+
       </ScrollView>
 
-      {/* Category Dots */}
-      <View style={styles.categoryDotsContainer}>
-        {categories.map((_, index) => (
-          <View
-            key={index}
-            style={[
-              styles.categoryDot,
-              activeCategory === index && styles.activeCategoryDot,
-            ]}
-          />
-        ))}
-      </View>
-
-      {/* Footer Buttons - Stacked Vertically */}
+      {/* Footer Buttons - Always at Bottom */}
       <View style={styles.footerButtons}>
         <TouchableOpacity
           style={styles.retakeButton}
@@ -143,7 +197,7 @@ export default function ResultsScreen() {
           <Text style={styles.shareButtonText}>Share</Text>
         </TouchableOpacity>
       </View>
-    </ScrollView>
+    </View>
   );
 }
 
@@ -173,9 +227,10 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#0B0B0F',
   },
-  content: {
-    padding: 20,
-    paddingBottom: 100,
+  mainScroll: {
+    flex: 1,
+    paddingHorizontal: 20,
+    paddingVertical: 20,
   },
   logoContainer: {
     position: 'absolute',
@@ -197,6 +252,13 @@ const styles = StyleSheet.create({
     marginBottom: 18,
     letterSpacing: 0.2,
   },
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: '700',
+    color: '#FFFFFF',
+    marginBottom: 12,
+    marginTop: 20,
+  },
   card: {
     padding: 18,
     marginBottom: 18,
@@ -207,51 +269,62 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     marginBottom: 12,
   },
-  statsGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
-    marginBottom: 16,
+  highlightsSection: {
+    marginBottom: 24,
   },
-  statItem: {
-    width: '48%',
+  highlightsCarousel: {
+    marginHorizontal: -20,
+  },
+  highlightItem: {
+    marginHorizontal: 8,
     alignItems: 'center',
+    justifyContent: 'center',
     paddingVertical: 12,
   },
-  statValue: {
-    fontSize: 24,
-    fontWeight: '800',
-    color: '#22C55E',
-    marginBottom: 4,
+  highlightEmoji: {
+    fontSize: 40,
+    marginBottom: 8,
   },
-  statLabel: {
-    fontSize: 12,
-    color: '#9CA3AF',
+  highlightLabel: {
+    fontSize: 13,
+    fontWeight: '600',
+    color: '#E5E7EB',
     textAlign: 'center',
   },
-  divider: {
-    height: 1,
-    backgroundColor: 'rgba(255,255,255,0.1)',
-    marginVertical: 14,
+  lifestyleSection: {
+    marginBottom: 24,
   },
-  topCategory: {
+  goalsContainer: {
+    gap: 12,
+  },
+  goalItem: {
+    flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: 8,
+    paddingVertical: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: 'rgba(255,255,255,0.05)',
   },
-  topCategoryLabel: {
-    fontSize: 12,
-    color: '#9CA3AF',
-    marginBottom: 6,
+  goalCheckmark: {
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    backgroundColor: '#22C55E',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 12,
   },
-  topCategoryName: {
-    fontSize: 18,
+  goalCheckmarkText: {
+    fontSize: 14,
     fontWeight: '700',
     color: '#FFFFFF',
-    marginBottom: 4,
   },
-  topCategoryCount: {
-    fontSize: 13,
-    color: '#22C55E',
+  goalText: {
+    fontSize: 15,
+    fontWeight: '500',
+    color: '#E5E7EB',
+  },
+  categoryCarouselWrapper: {
+    marginBottom: 80,
   },
   categoryRow: {
     flexDirection: 'row',
@@ -271,11 +344,47 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: '#22C55E',
   },
+  categoryCarousel: {
+    marginHorizontal: -20,
+  },
+  categorySlide: {
+    paddingHorizontal: 20,
+    paddingVertical: 12,
+  },
+  categoryDotsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: 6,
+    paddingVertical: 12,
+  },
+  categoryDot: {
+    width: 6,
+    height: 6,
+    borderRadius: 3,
+    backgroundColor: 'rgba(255,255,255,0.3)',
+  },
+  activeCategoryDot: {
+    backgroundColor: '#22C55E',
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+  },
+  emptyState: {
+    paddingVertical: 40,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  emptyStateText: {
+    color: '#9CA3AF',
+    fontSize: 14,
+    fontWeight: '500',
+  },
   footerButtons: {
     flexDirection: 'column',
     gap: 12,
-    marginTop: 24,
-    marginBottom: 20,
+    paddingHorizontal: 20,
+    paddingBottom: 20,
   },
   retakeButton: {
     width: '100%',

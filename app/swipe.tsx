@@ -132,11 +132,15 @@ export default function SwipeScreen() {
     return <View style={styles.container} />;
   }
 
+ 
+
+  if (finished) {
+    return <View style={styles.container} />;
+  }
+
   return (
     <View style={styles.container}>
-      <View style={styles.logoContainer}>
-        <View style={styles.beatsLogo} />
-      </View>
+     
 
       <Text style={styles.mainTitle}>Design Your Food Plan</Text>
 
