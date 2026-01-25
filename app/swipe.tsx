@@ -73,32 +73,13 @@ export default function SwipeScreen() {
     }
   };
 
-  const swipeLeft = () => {
-    translateX.value = withSpring(-width, {}, () =>
-      runOnJS(onSwipeComplete)('left')
-    );
-  };
-
-  const swipeRight = () => {
-    translateX.value = withSpring(width, {}, () =>
-      runOnJS(onSwipeComplete)('right')
-    );
-  };
-
-  const swipeUp = () => {
-    translateY.value = withSpring(-height, {}, () =>
-      runOnJS(onSwipeComplete)('up')
-    );
-  };
-
-  const swipeDown = () => {
-    translateY.value = withSpring(height, {}, () =>
-      runOnJS(onSwipeComplete)('down')
-    );
+  const handleSwipeComplete = (direction: 'left' | 'right' | 'up' | 'down') => {
+    onSwipeComplete(direction);
   };
 
   const panGesture = Gesture.Pan()
     .onUpdate(e => {
+      'worklet';
       translateX.value = e.translationX;
       translateY.value = e.translationY;
 
@@ -127,12 +108,28 @@ export default function SwipeScreen() {
       }
     })
     .onEnd(() => {
+      'worklet';
       swipeDirection.value = 'none';
-      if (translateX.value > SWIPE_THRESHOLD) swipeRight();
-      else if (translateX.value < -SWIPE_THRESHOLD) swipeLeft();
-      else if (translateY.value > SWIPE_VERTICAL_THRESHOLD) swipeDown();
-      else if (translateY.value < -SWIPE_VERTICAL_THRESHOLD) swipeUp();
-      else {
+      const transX = translateX.value;
+      const transY = translateY.value;
+
+      if (transX > SWIPE_THRESHOLD) {
+        translateX.value = withSpring(width, {}, () =>
+          runOnJS(handleSwipeComplete)('right')
+        );
+      } else if (transX < -SWIPE_THRESHOLD) {
+        translateX.value = withSpring(-width, {}, () =>
+          runOnJS(handleSwipeComplete)('left')
+        );
+      } else if (transY > SWIPE_VERTICAL_THRESHOLD) {
+        translateY.value = withSpring(height, {}, () =>
+          runOnJS(handleSwipeComplete)('down')
+        );
+      } else if (transY < -SWIPE_VERTICAL_THRESHOLD) {
+        translateY.value = withSpring(-height, {}, () =>
+          runOnJS(handleSwipeComplete)('up')
+        );
+      } else {
         translateX.value = withSpring(0);
         translateY.value = withSpring(0);
       }
@@ -190,10 +187,26 @@ export default function SwipeScreen() {
       </View>
 
       <SwipeActions
-        onLike={swipeRight}
-        onDislike={swipeLeft}
-        onSuperLike={swipeUp}
-        onNotSure={swipeDown}
+        onLike={() => {
+          translateX.value = withSpring(width, {}, () =>
+            runOnJS(handleSwipeComplete)('right')
+          );
+        }}
+        onDislike={() => {
+          translateX.value = withSpring(-width, {}, () =>
+            runOnJS(handleSwipeComplete)('left')
+          );
+        }}
+        onSuperLike={() => {
+          translateY.value = withSpring(-height, {}, () =>
+            runOnJS(handleSwipeComplete)('up')
+          );
+        }}
+        onNotSure={() => {
+          translateY.value = withSpring(height, {}, () =>
+            runOnJS(handleSwipeComplete)('down')
+          );
+        }}
       />
     </View>
   );
