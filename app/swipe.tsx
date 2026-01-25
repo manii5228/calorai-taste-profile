@@ -1,4 +1,4 @@
-import { View, StyleSheet, Dimensions } from 'react-native';
+import { View, StyleSheet, Dimensions, Text, TouchableOpacity } from 'react-native';
 import { useState } from 'react';
 import Animated, {
   useSharedValue,
@@ -10,10 +10,11 @@ import Animated, {
 } from 'react-native-reanimated';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import { useRouter } from 'expo-router';
-import SwipeActions from '@/components/SwipeActions';
-import { foods } from '@/constants/foods';
-import SwipeCard from '@/components/SwipeCard';
-import ProgressBar from '@/components/ProgressBar';
+import SwipeActions from '../components/SwipeActions';
+import { foods } from '../constants/foods';
+import SwipeCard from '../components/SwipeCard';
+import ProgressBar from '../components/ProgressBar';
+import GlassCard from '../components/GlassCard';
 
 const { width,height } = Dimensions.get('window');
 const SWIPE_VERTICAL_THRESHOLD = height * 0.25;
@@ -22,28 +23,34 @@ const SWIPE_THRESHOLD = width * 0.25;
 export default function SwipeScreen() {
   const [index, setIndex] = useState(0);
   const [likes, setLikes] = useState<number[]>([]);
-  const [notSure, setNotSure] = useState<number[]>([]);
-  const [superLikes, setSuperLikes] = useState<number[]>([]);
   const [dislikes, setDislikes] = useState<number[]>([]);
+  const [superLike, setsuperLike] = useState<number[]>([]);
+  const [notSure, setNotSure] = useState<number[]>([]);
   const [finished, setFinished] = useState(false);
+  const [showOnboarding, setShowOnboarding] = useState(true);
 
   const translateX = useSharedValue(0);
   const translateY = useSharedValue(0);
   const router = useRouter();
 
-  const handleFinish = (finalLikes: number[], finalDislikes: number[], finalNotSure: number[], finalsuperLikes: number[]) => {
+  const handleFinish = (
+    finalLikes: number[],
+     finalDislikes: number[],
+     finalsuperLike: number[],
+     finalNotSure: number[]
+    ) => {
     router.replace({
       pathname: '/results',
       params: {
         likes: JSON.stringify(finalLikes),
         dislikes: JSON.stringify(finalDislikes),
+        superLike: JSON.stringify(finalsuperLike),
         notSure: JSON.stringify(finalNotSure),
-        superLikes: JSON.stringify(finalsuperLikes),
       },
     });
   };
 
-  const onSwipeComplete = (direction: 'left' | 'right'| 'down'| 'up') => {
+  const onSwipeComplete = (direction: 'left' | 'right'| 'up'| 'down') => {
     const food = foods[index];
     if (!food) return;
 
@@ -51,21 +58,21 @@ export default function SwipeScreen() {
       direction === 'right' ? [...likes, food.id] : likes;
     const newDislikes =
       direction === 'left' ? [...dislikes, food.id] : dislikes;
+    const newsuperLike =
+      direction === 'up' ? [...superLike, food.id] : superLike;
     const newNotSure =
-      direction === 'up' ? [...notSure, food.id] : notSure;
-    const newSuperLikes =
-      direction === 'down' ? [...superLikes, food.id] : superLikes;
-
+      direction === 'down' ? [...notSure, food.id] : notSure;
+    
     setLikes(newLikes);
     setDislikes(newDislikes);
+    setsuperLike(newsuperLike);
     setNotSure(newNotSure);
-    setSuperLikes(newSuperLikes);
     translateX.value = 0;
     translateY.value = 0;
 
     if (index === foods.length - 1) {
       setFinished(true);
-      runOnJS(handleFinish)(newLikes, newDislikes, newNotSure, newSuperLikes);
+      runOnJS(handleFinish)(newLikes, newDislikes, newsuperLike, newNotSure);
     } else {
       setIndex(prev => prev + 1);
     }
@@ -84,17 +91,16 @@ export default function SwipeScreen() {
   };
 
   const swipeUp = () => {
-    translateY.value = withSpring(-width, {}, () =>
+    translateY.value = withSpring(-height, {}, () =>
       runOnJS(onSwipeComplete)('up')
     );
   };
 
   const swipeDown = () => {
-    translateY.value = withSpring(width, {}, () =>
+    translateY.value = withSpring(height, {}, () =>
       runOnJS(onSwipeComplete)('down')
     );
-  }
-  
+  };
 
   const panGesture = Gesture.Pan()
     .onUpdate(e => {
@@ -104,8 +110,8 @@ export default function SwipeScreen() {
     .onEnd(() => {
       if (translateX.value > SWIPE_THRESHOLD) swipeRight();
       else if (translateX.value < -SWIPE_THRESHOLD) swipeLeft();
-      else if (translateY.value > SWIPE_THRESHOLD) swipeDown();
-      else if (translateY.value < -SWIPE_THRESHOLD) swipeUp();
+      else if (translateY.value > SWIPE_VERTICAL_THRESHOLD) swipeDown();
+      else if (translateY.value < -SWIPE_VERTICAL_THRESHOLD) swipeUp();
       else {
         translateX.value = withSpring(0);
         translateY.value = withSpring(0);
@@ -133,6 +139,12 @@ export default function SwipeScreen() {
     return <View style={styles.container} />;
   }
 
+ 
+
+  if (finished) {
+    return <View style={styles.container} />;
+  }
+
   return (
     <View style={styles.container}>
       <ProgressBar progress={index / foods.length} />
@@ -153,8 +165,8 @@ export default function SwipeScreen() {
       <SwipeActions
         onLike={swipeRight}
         onDislike={swipeLeft}
-        onNotSure={swipeUp}
-        onSuperLike={swipeDown}
+        onSuperLike={swipeUp}
+        onNotSure={swipeDown}
       />
     </View>
   );
@@ -164,6 +176,75 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#0B0B0F',
+  },
+  logoContainer: {
+    position: 'absolute',
+    top: 50,
+    right: 30,
+    zIndex: 10,
+  },
+  beatsLogo: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    backgroundColor: '#00FF00',
+    opacity: 0.8,
+  },
+  mainTitle: {
+    color: '#FFFFFF',
+    fontSize: 32,
+    fontWeight: '600',
+    paddingTop: 80,
+    paddingHorizontal: 20,
+    marginBottom: 20,
+    textAlign: 'left',
+  },
+  centerContent: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+  },
+  cardContent: {
+    alignItems: 'center',
+  },
+  emoji: {
+    fontSize: 60,
+    marginBottom: 16,
+  },
+  cardTitle: {
+    color: '#FFFFFF',
+    fontSize: 22,
+    fontWeight: '600',
+    marginBottom: 12,
+    textAlign: 'center',
+  },
+  cardDescription: {
+    color: '#C0C0C0',
+    fontSize: 14,
+    lineHeight: 20,
+    textAlign: 'center',
+    marginBottom: 28,
+    maxWidth: 280,
+  },
+  startButton: {
+    backgroundColor: '#00FF00',
+    paddingVertical: 14,
+    paddingHorizontal: 48,
+    borderRadius: 24,
+    marginBottom: 16,
+  },
+  startButtonText: {
+    color: '#000000',
+    fontSize: 16,
+    fontWeight: '700',
+    textAlign: 'center',
+  },
+  footerText: {
+    color: '#808080',
+    fontSize: 12,
+    textAlign: 'center',
+    marginTop: 8,
   },
   cardWrapper: {
     flex: 1,
