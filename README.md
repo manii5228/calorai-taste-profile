@@ -69,8 +69,7 @@ Methodology
 -----------
 
 ### Architecture Overview
-
-Plain textANTLR4BashCC#CSSCoffeeScriptCMakeDartDjangoDockerEJSErlangGitGoGraphQLGroovyHTMLJavaJavaScriptJSONJSXKotlinLaTeXLessLuaMakefileMarkdownMATLABMarkupObjective-CPerlPHPPowerShell.propertiesProtocol BuffersPythonRRubySass (Sass)Sass (Scss)SchemeSQLShellSwiftSVGTSXTypeScriptWebAssemblyYAMLXML`   User Input (Swipe Screen)          ↓  Preference Collection (4 Directions)          ↓  Data Aggregation & Scoring          ↓  Taste Profile Building          ↓  Analytics & Insights Generation          ↓  Results Visualization   `
+`   User Input (Swipe Screen)          ↓  Preference Collection (4 Directions)          ↓  Data Aggregation & Scoring          ↓  Taste Profile Building          ↓  Analytics & Insights Generation          ↓  Results Visualization   `
 
 ### Technical Approach:
 
@@ -96,8 +95,8 @@ Plain textANTLR4BashCC#CSSCoffeeScriptCMakeDartDjangoDockerEJSErlangGitGoGraphQL
         
 
 #### 2. **Data Scoring System**
-
-Plain textANTLR4BashCC#CSSCoffeeScriptCMakeDartDjangoDockerEJSErlangGitGoGraphQLGroovyHTMLJavaJavaScriptJSONJSXKotlinLaTeXLessLuaMakefileMarkdownMATLABMarkupObjective-CPerlPHPPowerShell.propertiesProtocol BuffersPythonRRubySass (Sass)Sass (Scss)SchemeSQLShellSwiftSVGTSXTypeScriptWebAssemblyYAMLXML`   scoreFood(food, weight):    - Super Like: weight = 3x    - Like: weight = 2x    - Not Sure: weight = 1x    - Dislike: weight = 0x (negative impact)   `
+`
+scoreFood(food, weight):    - Super Like: weight = 3x    - Like: weight = 2x    - Not Sure: weight = 1x    - Dislike: weight = 0x (negative impact)   `
 
 #### 3. **Taste Profile Construction**
 
@@ -125,7 +124,7 @@ Uses rule-based analytics on aggregated scores:
 
 #### 5. **UI/UX Pattern**
 
-Plain textANTLR4BashCC#CSSCoffeeScriptCMakeDartDjangoDockerEJSErlangGitGoGraphQLGroovyHTMLJavaJavaScriptJSONJSXKotlinLaTeXLessLuaMakefileMarkdownMATLABMarkupObjective-CPerlPHPPowerShell.propertiesProtocol BuffersPythonRRubySass (Sass)Sass (Scss)SchemeSQLShellSwiftSVGTSXTypeScriptWebAssemblyYAMLXML`   Swipe Screen (Data Input)      ↓  Results Screen (Data Visualization)      ├── Key Highlights Carousel (Diet + Cuisines + Categories)      ├── Taste Highlights (Lifestyle Insights)      └── Food Categories Carousel (Detailed Preferences)   `
+`   Swipe Screen (Data Input)      ↓  Results Screen (Data Visualization)      ├── Key Highlights Carousel (Diet + Cuisines + Categories)      ├── Taste Highlights (Lifestyle Insights)      └── Food Categories Carousel (Detailed Preferences)   `
 
 Skills & Technologies
 ---------------------
@@ -257,29 +256,29 @@ How to Use
 
 ### Prerequisites
 
-Plain textANTLR4BashCC#CSSCoffeeScriptCMakeDartDjangoDockerEJSErlangGitGoGraphQLGroovyHTMLJavaJavaScriptJSONJSXKotlinLaTeXLessLuaMakefileMarkdownMATLABMarkupObjective-CPerlPHPPowerShell.propertiesProtocol BuffersPythonRRubySass (Sass)Sass (Scss)SchemeSQLShellSwiftSVGTSXTypeScriptWebAssemblyYAMLXML`   Node.js (v14 or higher)  npm or yarn package manager  Expo CLI  iOS Simulator or Android Emulator (or physical device)   `
+`   Node.js (v14 or higher)  npm or yarn package manager  Expo CLI  iOS Simulator or Android Emulator (or physical device)   `
 
 ### Installation
 
 1.  **Clone the Repository**
     
 
-Plain textANTLR4BashCC#CSSCoffeeScriptCMakeDartDjangoDockerEJSErlangGitGoGraphQLGroovyHTMLJavaJavaScriptJSONJSXKotlinLaTeXLessLuaMakefileMarkdownMATLABMarkupObjective-CPerlPHPPowerShell.propertiesProtocol BuffersPythonRRubySass (Sass)Sass (Scss)SchemeSQLShellSwiftSVGTSXTypeScriptWebAssemblyYAMLXML`   git clone https://github.com/manii5228/calorai-taste-profile.git  cd calorai-taste-profile   `
+`   git clone https://github.com/manii5228/calorai-taste-profile.git  cd calorai-taste-profile   `
 
 1.  **Install Dependencies**
     
 
-Plain textANTLR4BashCC#CSSCoffeeScriptCMakeDartDjangoDockerEJSErlangGitGoGraphQLGroovyHTMLJavaJavaScriptJSONJSXKotlinLaTeXLessLuaMakefileMarkdownMATLABMarkupObjective-CPerlPHPPowerShell.propertiesProtocol BuffersPythonRRubySass (Sass)Sass (Scss)SchemeSQLShellSwiftSVGTSXTypeScriptWebAssemblyYAMLXML`   npm install  # or  yarn install   `
+`   npm install  # or  yarn install   `
 
 1.  **Start the Development Server**
     
 
-Plain textANTLR4BashCC#CSSCoffeeScriptCMakeDartDjangoDockerEJSErlangGitGoGraphQLGroovyHTMLJavaJavaScriptJSONJSXKotlinLaTeXLessLuaMakefileMarkdownMATLABMarkupObjective-CPerlPHPPowerShell.propertiesProtocol BuffersPythonRRubySass (Sass)Sass (Scss)SchemeSQLShellSwiftSVGTSXTypeScriptWebAssemblyYAMLXML`   npx expo start -c   `
+`   npx expo start -c   `
 
 1.  **Run on Device/Emulator**
     
 
-Plain textANTLR4BashCC#CSSCoffeeScriptCMakeDartDjangoDockerEJSErlangGitGoGraphQLGroovyHTMLJavaJavaScriptJSONJSXKotlinLaTeXLessLuaMakefileMarkdownMATLABMarkupObjective-CPerlPHPPowerShell.propertiesProtocol BuffersPythonRRubySass (Sass)Sass (Scss)SchemeSQLShellSwiftSVGTSXTypeScriptWebAssemblyYAMLXML`   # For iOS  i  # For Android  a  # For Web  w   `
+`   # For iOS  i  # For Android  a  # For Web  w   `
 
 ### User Flow Guide
 
@@ -342,33 +341,12 @@ Plain textANTLR4BashCC#CSSCoffeeScriptCMakeDartDjangoDockerEJSErlangGitGoGraphQL
     *   **Share** - Share your taste profile
         
 
-📸 Demo Screenshots
--------------------
 
-### 1\. Welcome/Index Screen
-
-Plain textANTLR4BashCC#CSSCoffeeScriptCMakeDartDjangoDockerEJSErlangGitGoGraphQLGroovyHTMLJavaJavaScriptJSONJSXKotlinLaTeXLessLuaMakefileMarkdownMATLABMarkupObjective-CPerlPHPPowerShell.propertiesProtocol BuffersPythonRRubySass (Sass)Sass (Scss)SchemeSQLShellSwiftSVGTSXTypeScriptWebAssemblyYAMLXML
-
-### 2\. Swipe Screen with Indicators
-
-Plain textANTLR4BashCC#CSSCoffeeScriptCMakeDartDjangoDockerEJSErlangGitGoGraphQLGroovyHTMLJavaJavaScriptJSONJSXKotlinLaTeXLessLuaMakefileMarkdownMATLABMarkupObjective-CPerlPHPPowerShell.propertiesProtocol BuffersPythonRRubySass (Sass)Sass (Scss)SchemeSQLShellSwiftSVGTSXTypeScriptWebAssemblyYAMLXML
-
-### 3\. Results Screen - Key Highlights
-
-Plain textANTLR4BashCC#CSSCoffeeScriptCMakeDartDjangoDockerEJSErlangGitGoGraphQLGroovyHTMLJavaJavaScriptJSONJSXKotlinLaTeXLessLuaMakefileMarkdownMATLABMarkupObjective-CPerlPHPPowerShell.propertiesProtocol BuffersPythonRRubySass (Sass)Sass (Scss)SchemeSQLShellSwiftSVGTSXTypeScriptWebAssemblyYAMLXML
-
-### 4\. Results Screen - Food Categories
-
-Plain textANTLR4BashCC#CSSCoffeeScriptCMakeDartDjangoDockerEJSErlangGitGoGraphQLGroovyHTMLJavaJavaScriptJSONJSXKotlinLaTeXLessLuaMakefileMarkdownMATLABMarkupObjective-CPerlPHPPowerShell.propertiesProtocol BuffersPythonRRubySass (Sass)Sass (Scss)SchemeSQLShellSwiftSVGTSXTypeScriptWebAssemblyYAMLXML
-
-### 5\. Color Scheme
-
-Plain textANTLR4BashCC#CSSCoffeeScriptCMakeDartDjangoDockerEJSErlangGitGoGraphQLGroovyHTMLJavaJavaScriptJSONJSXKotlinLaTeXLessLuaMakefileMarkdownMATLABMarkupObjective-CPerlPHPPowerShell.propertiesProtocol BuffersPythonRRubySass (Sass)Sass (Scss)SchemeSQLShellSwiftSVGTSXTypeScriptWebAssemblyYAMLXML`   Background:    #0B0B0F (Dark)  Primary:       #22C55E (Green)  Secondary:     #3B82F6 (Blue)  Like:          #22C55E (Green)  Dislike:       #EF4444 (Red)  Super Like:    #3B82F6 (Blue)  Not Sure:      #6B7280 (Gray)  Text Primary:  #FFFFFF (White)  Text Secondary:#E5E7EB (Light Gray)  Border:        rgba(255,255,255,0.1)  Glass BG:      rgba(255,255,255,0.06)   `
 
 🏗️ Project Structure
 ---------------------
 
-Plain textANTLR4BashCC#CSSCoffeeScriptCMakeDartDjangoDockerEJSErlangGitGoGraphQLGroovyHTMLJavaJavaScriptJSONJSXKotlinLaTeXLessLuaMakefileMarkdownMATLABMarkupObjective-CPerlPHPPowerShell.propertiesProtocol BuffersPythonRRubySass (Sass)Sass (Scss)SchemeSQLShellSwiftSVGTSXTypeScriptWebAssemblyYAMLXML`   calorai-taste-profile/  ├── app/  │   ├── _layout.tsx          # Root layout  │   ├── index.tsx            # Welcome screen  │   ├── swipe.tsx            # Swipe interaction screen  │   └── results.tsx          # Results & insights screen  ├── components/  │   ├── GlassCard.tsx        # Glass morphism card  │   ├── GlassView.tsx        # Alternative glass container  │   ├── ItemCarousel.tsx     # Food items carousel  │   ├── ProgressBar.tsx      # Progress indicator  │   ├── SwipeActions.tsx     # Action buttons  │   ├── SwipeCard.tsx        # Food card display  │   └── SwipeIndicator.tsx   # Swipe direction badges  ├── constants/  │   ├── foods.ts             # Foods & cuisines export  │   ├── foods.json           # Food data (50+ items)  │   └── theme.ts             # Design tokens  ├── utils/  │   ├── tasteProfiler.ts     # Profile building logic  │   └── insigths.ts          # Analytics & insights  └── package.json   `
+`   calorai-taste-profile/  ├── app/  │   ├── _layout.tsx          # Root layout  │   ├── index.tsx            # Welcome screen  │   ├── swipe.tsx            # Swipe interaction screen  │   └── results.tsx          # Results & insights screen  ├── components/  │   ├── GlassCard.tsx        # Glass morphism card  │   ├── GlassView.tsx        # Alternative glass container  │   ├── ItemCarousel.tsx     # Food items carousel  │   ├── ProgressBar.tsx      # Progress indicator  │   ├── SwipeActions.tsx     # Action buttons  │   ├── SwipeCard.tsx        # Food card display  │   └── SwipeIndicator.tsx   # Swipe direction badges  ├── constants/  │   ├── foods.ts             # Foods & cuisines export  │   ├── foods.json           # Food data (50+ items)  │   └── theme.ts             # Design tokens  ├── utils/  │   ├── tasteProfiler.ts     # Profile building logic  │   └── insigths.ts          # Analytics & insights  └── package.json   `
 
 🔗 Technologies Used
 --------------------
