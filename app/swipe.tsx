@@ -10,58 +10,91 @@ import Animated, {
 } from 'react-native-reanimated';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import { useRouter } from 'expo-router';
-
 import SwipeActions from '@/components/SwipeActions';
 import { foods } from '@/constants/foods';
 import SwipeCard from '@/components/SwipeCard';
 import ProgressBar from '@/components/ProgressBar';
 
-const { width, height } = Dimensions.get('window');
+const { width,height } = Dimensions.get('window');
+const SWIPE_VERTICAL_THRESHOLD = height * 0.25;
 const SWIPE_THRESHOLD = width * 0.25;
-const SWIPE_VERTICAL_THRESHOLD = height * 0.15;
 
 export default function SwipeScreen() {
   const [index, setIndex] = useState(0);
   const [likes, setLikes] = useState<number[]>([]);
-  const [dislikes, setDislikes] = useState<number[]>([]);
-  const [superLikes, setSuperLikes] = useState<number[]>([]);
   const [notSure, setNotSure] = useState<number[]>([]);
+  const [superLikes, setSuperLikes] = useState<number[]>([]);
+  const [dislikes, setDislikes] = useState<number[]>([]);
+  const [finished, setFinished] = useState(false);
+
   const translateX = useSharedValue(0);
   const translateY = useSharedValue(0);
   const router = useRouter();
 
-  const handleFinish = () => {
+  const handleFinish = (finalLikes: number[], finalDislikes: number[], finalNotSure: number[], finalsuperLikes: number[]) => {
     router.replace({
-      pathname: '/(tabs)/results',
+      pathname: '/results',
       params: {
-        likes: JSON.stringify(likes),
-        dislikes: JSON.stringify(dislikes),
-        superLikes: JSON.stringify(superLikes),
-        notSure: JSON.stringify(notSure),
+        likes: JSON.stringify(finalLikes),
+        dislikes: JSON.stringify(finalDislikes),
+        notSure: JSON.stringify(finalNotSure),
+        superLikes: JSON.stringify(finalsuperLikes),
       },
     });
   };
 
-  const onSwipeComplete = (direction: 'left' | 'right' | 'up' | 'down') => {
+  const onSwipeComplete = (direction: 'left' | 'right'| 'down'| 'up') => {
     const food = foods[index];
     if (!food) return;
 
-    if (direction === 'right') setLikes(prev => [...prev, food.id]);
-    else if (direction === 'left') setDislikes(prev => [...prev, food.id]);
-    else if (direction === 'up') setSuperLikes(prev => [...prev, food.id]);
-    else if (direction === 'down') setNotSure(prev => [...prev, food.id]);
+    const newLikes =
+      direction === 'right' ? [...likes, food.id] : likes;
+    const newDislikes =
+      direction === 'left' ? [...dislikes, food.id] : dislikes;
+    const newNotSure =
+      direction === 'up' ? [...notSure, food.id] : notSure;
+    const newSuperLikes =
+      direction === 'down' ? [...superLikes, food.id] : superLikes;
 
+    setLikes(newLikes);
+    setDislikes(newDislikes);
+    setNotSure(newNotSure);
+    setSuperLikes(newSuperLikes);
     translateX.value = 0;
     translateY.value = 0;
 
-    if (index === foods.length - 1) runOnJS(handleFinish)();
-    else setIndex(prev => prev + 1);
+    if (index === foods.length - 1) {
+      setFinished(true);
+      runOnJS(handleFinish)(newLikes, newDislikes, newNotSure, newSuperLikes);
+    } else {
+      setIndex(prev => prev + 1);
+    }
   };
 
-  const swipeLeft = () => translateX.value = withSpring(-width, {}, () => runOnJS(onSwipeComplete)('left'));
-  const swipeRight = () => translateX.value = withSpring(width, {}, () => runOnJS(onSwipeComplete)('right'));
-  const swipeUp = () => translateY.value = withSpring(-height, {}, () => runOnJS(onSwipeComplete)('up'));
-  const swipeDown = () => translateY.value = withSpring(height, {}, () => runOnJS(onSwipeComplete)('down'));
+  const swipeLeft = () => {
+    translateX.value = withSpring(-width, {}, () =>
+      runOnJS(onSwipeComplete)('left')
+    );
+  };
+
+  const swipeRight = () => {
+    translateX.value = withSpring(width, {}, () =>
+      runOnJS(onSwipeComplete)('right')
+    );
+  };
+
+  const swipeUp = () => {
+    translateY.value = withSpring(-width, {}, () =>
+      runOnJS(onSwipeComplete)('up')
+    );
+  };
+
+  const swipeDown = () => {
+    translateY.value = withSpring(width, {}, () =>
+      runOnJS(onSwipeComplete)('down')
+    );
+  }
+  
 
   const panGesture = Gesture.Pan()
     .onUpdate(e => {
@@ -71,8 +104,8 @@ export default function SwipeScreen() {
     .onEnd(() => {
       if (translateX.value > SWIPE_THRESHOLD) swipeRight();
       else if (translateX.value < -SWIPE_THRESHOLD) swipeLeft();
-      else if (translateY.value < -SWIPE_VERTICAL_THRESHOLD) swipeUp();
-      else if (translateY.value > SWIPE_VERTICAL_THRESHOLD) swipeDown();
+      else if (translateY.value > SWIPE_THRESHOLD) swipeDown();
+      else if (translateY.value < -SWIPE_THRESHOLD) swipeUp();
       else {
         translateX.value = withSpring(0);
         translateY.value = withSpring(0);
@@ -96,14 +129,22 @@ export default function SwipeScreen() {
     };
   });
 
+  if (finished) {
+    return <View style={styles.container} />;
+  }
+
   return (
     <View style={styles.container}>
       <ProgressBar progress={index / foods.length} />
+
       <View style={styles.cardWrapper}>
         {foods[index] && (
           <GestureDetector gesture={panGesture}>
             <Animated.View style={animatedStyle}>
-              <SwipeCard name={foods[index].name} image={foods[index].image} />
+              <SwipeCard
+                name={foods[index].name}
+                image={foods[index].image}
+              />
             </Animated.View>
           </GestureDetector>
         )}
@@ -112,14 +153,21 @@ export default function SwipeScreen() {
       <SwipeActions
         onLike={swipeRight}
         onDislike={swipeLeft}
-        onSuperLike={swipeUp}
-        onNotSure={swipeDown}
+        onNotSure={swipeUp}
+        onSuperLike={swipeDown}
       />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#0B0B0F' },
-  cardWrapper: { flex: 1, alignItems: 'center', justifyContent: 'center' },
+  container: {
+    flex: 1,
+    backgroundColor: '#0B0B0F',
+  },
+  cardWrapper: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
 });
