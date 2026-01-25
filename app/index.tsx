@@ -7,8 +7,9 @@ export default function IntroScreen() {
 
   return (
     <View style={styles.container}>
+      <Text style={styles.header}>design Your Food Plan</Text>  
       <GlassCard>
-        <Text style={styles.title}>Discover Your Taste</Text>
+        <Text style={styles.title}>Build Your Taste Profile</Text>
         <Text style={styles.subtitle}>
           Swipe foods you love or dislike so CalorAI can personalize your meals.
         </Text>
@@ -25,6 +26,13 @@ export default function IntroScreen() {
 }
 
 const styles = StyleSheet.create({
+  header: {
+    fontSize: 28,
+    fontWeight: '700',
+    color: '#FFFFFF',
+    marginBottom: 14,
+  },
+
   container: {
     flex: 1,
     justifyContent: 'center',
@@ -32,13 +40,13 @@ const styles = StyleSheet.create({
     backgroundColor: '#0B0B0F',
   },
   title: {
-    fontSize: 28,
+    fontSize: 24,
     fontWeight: '700',
     color: '#FFFFFF',
     marginBottom: 12,
   },
   subtitle: {
-    fontSize: 16,
+    fontSize: 18,
     color: 'rgba(255,255,255,0.75)',
     marginBottom: 32,
   },

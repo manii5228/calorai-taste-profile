@@ -1,47 +1,37 @@
-import { View, Text, Image, StyleSheet, Dimensions } from 'react-native';
-
-const { width } = Dimensions.get('window');
+import { View, Text, Image, StyleSheet } from 'react-native';
+import GlassView from './GlassView';
 
 type Props = {
   name: string;
-  image: string;
+  image: any;
 };
 
 export default function SwipeCard({ name, image }: Props) {
   return (
-    <View style={styles.card}>
-      <Image source={{ uri: image }} style={styles.image} />
-      <View style={styles.label}>
-        <Text style={styles.text}>{name}</Text>
+    <GlassView intensity={30} radius={24}>
+      <View style={styles.container}>
+        <Image source={image} style={styles.image} />
+        <Text style={styles.title}>{name}</Text>
       </View>
-    </View>
+    </GlassView>
   );
 }
 
 const styles = StyleSheet.create({
-  card: {
-    width: width * 0.9,
-    height: width * 1.2,
-    borderRadius: 20,
-    overflow: 'hidden',
-    backgroundColor: '#000',
+  container: {
+    width: 320,
+    padding: 16,
   },
   image: {
     width: '100%',
-    height: '100%',
-  },
-  label: {
-    position: 'absolute',
-    bottom: 24,
-    left: 24,
-    right: 24,
-    backgroundColor: 'rgba(0,0,0,0.4)',
-    padding: 12,
+    height: 220,
     borderRadius: 12,
+    marginBottom: 12,
   },
-  text: {
+  title: {
     color: '#FFF',
-    fontSize: 20,
+    fontSize: 18,
     fontWeight: '600',
+    textAlign: 'center',
   },
 });
