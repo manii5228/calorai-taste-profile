@@ -11,7 +11,7 @@ export default function GlassCard({ children }: Props) {
   }
 
   return (
-    <BlurView intensity={25} tint="dark" style={styles.ios}>
+    <BlurView intensity={20} tint="dark" style={styles.ios}>
       {children}
     </BlurView>
   );
@@ -24,6 +24,7 @@ const styles = StyleSheet.create({
     padding: 24,
     borderWidth: 1,
     borderColor: 'rgba(255,255,255,0.2)',
+    overflow: 'hidden',
     shadowColor: '#000',
     shadowOpacity: 0.35,
     shadowRadius: 20,

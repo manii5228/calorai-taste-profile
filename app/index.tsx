@@ -7,9 +7,11 @@ export default function IntroScreen() {
 
   return (
     <View style={styles.container}>
-           
-   
-           {/* Main Title */}
+      <View style={styles.logoContainer}>
+        <View style={styles.beatsLogo} />
+      </View>
+          
+          {/* Main Title */}
            <Text style={styles.mainTitle}>Design Your Food Plan</Text>
    
            {/* Glass Card Content */}
@@ -90,7 +92,7 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
     borderRadius: 25,
-    backgroundColor: '#00FF00',
+    backgroundColor: '#22C55E',
     opacity: 0.8,
   },
   mainTitle: {
@@ -131,7 +133,7 @@ const styles = StyleSheet.create({
     maxWidth: 280,
   },
   startButton: {
-    backgroundColor: '#00FF00',
+    backgroundColor: '#22C55E',
     paddingVertical: 14,
     paddingHorizontal: 48,
     borderRadius: 24,

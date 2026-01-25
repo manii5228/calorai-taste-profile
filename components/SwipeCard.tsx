@@ -19,19 +19,19 @@ export default function SwipeCard({ name, image }: Props) {
 
 const styles = StyleSheet.create({
   container: {
-    width: 320,
-    padding: 16,
+    width: 340,
+    padding: 18,
   },
   image: {
     width: '100%',
-    height: 220,
-    borderRadius: 12,
-    marginBottom: 12,
+    height: 240,
+    borderRadius: 14,
+    marginBottom: 14,
   },
   title: {
-    color: '#FFF',
-    fontSize: 18,
-    fontWeight: '600',
+    color: '#FFFFFF',
+    fontSize: 20,
+    fontWeight: '700',
     textAlign: 'center',
   },
 });

@@ -1,4 +1,4 @@
-import { View, StyleSheet, Dimensions, Text, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, Dimensions, Text } from 'react-native';
 import { useState } from 'react';
 import Animated, {
   useSharedValue,
@@ -14,7 +14,6 @@ import SwipeActions from '../components/SwipeActions';
 import { foods } from '../constants/foods';
 import SwipeCard from '../components/SwipeCard';
 import ProgressBar from '../components/ProgressBar';
-import GlassCard from '../components/GlassCard';
 
 const { width,height } = Dimensions.get('window');
 const SWIPE_VERTICAL_THRESHOLD = height * 0.25;
@@ -27,18 +26,16 @@ export default function SwipeScreen() {
   const [superLike, setsuperLike] = useState<number[]>([]);
   const [notSure, setNotSure] = useState<number[]>([]);
   const [finished, setFinished] = useState(false);
-  const [showOnboarding, setShowOnboarding] = useState(true);
 
   const translateX = useSharedValue(0);
   const translateY = useSharedValue(0);
   const router = useRouter();
-
   const handleFinish = (
     finalLikes: number[],
-     finalDislikes: number[],
-     finalsuperLike: number[],
-     finalNotSure: number[]
-    ) => {
+    finalDislikes: number[],
+    finalsuperLike: number[],
+    finalNotSure: number[]
+  ) => {
     router.replace({
       pathname: '/results',
       params: {
@@ -50,19 +47,15 @@ export default function SwipeScreen() {
     });
   };
 
-  const onSwipeComplete = (direction: 'left' | 'right'| 'up'| 'down') => {
+  const onSwipeComplete = (direction: 'left' | 'right' | 'up' | 'down') => {
     const food = foods[index];
     if (!food) return;
 
-    const newLikes =
-      direction === 'right' ? [...likes, food.id] : likes;
-    const newDislikes =
-      direction === 'left' ? [...dislikes, food.id] : dislikes;
-    const newsuperLike =
-      direction === 'up' ? [...superLike, food.id] : superLike;
-    const newNotSure =
-      direction === 'down' ? [...notSure, food.id] : notSure;
-    
+    const newLikes = direction === 'right' ? [...likes, food.id] : likes;
+    const newDislikes = direction === 'left' ? [...dislikes, food.id] : dislikes;
+    const newsuperLike = direction === 'up' ? [...superLike, food.id] : superLike;
+    const newNotSure = direction === 'down' ? [...notSure, food.id] : notSure;
+
     setLikes(newLikes);
     setDislikes(newDislikes);
     setsuperLike(newsuperLike);
@@ -139,14 +132,14 @@ export default function SwipeScreen() {
     return <View style={styles.container} />;
   }
 
- 
-
-  if (finished) {
-    return <View style={styles.container} />;
-  }
-
   return (
     <View style={styles.container}>
+      <View style={styles.logoContainer}>
+        <View style={styles.beatsLogo} />
+      </View>
+
+      <Text style={styles.mainTitle}>Design Your Food Plan</Text>
+
       <ProgressBar progress={index / foods.length} />
 
       <View style={styles.cardWrapper}>
