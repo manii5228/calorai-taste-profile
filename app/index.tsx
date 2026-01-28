@@ -7,9 +7,7 @@ export default function IntroScreen() {
 
   return (
     <View style={styles.container}>
-      <View style={styles.logoContainer}>
-        <View style={styles.beatsLogo} />
-      </View>
+      
           
           {/* Main Title */}
            <Text style={styles.mainTitle}>Design Your Food Plan</Text>
@@ -88,13 +86,7 @@ const styles = StyleSheet.create({
     right: 30,
     zIndex: 10,
   },
-  beatsLogo: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
-    backgroundColor: '#22C55E',
-    opacity: 0.8,
-  },
+
   mainTitle: {
     color: '#FFFFFF',
     fontSize: 32,
@@ -111,6 +103,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   cardContent: {
+    height: '70%',
+    justifyContent: 'center',
     alignItems: 'center',
   },
   emoji: {

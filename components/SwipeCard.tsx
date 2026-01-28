@@ -1,5 +1,6 @@
-import { View, Text, Image, StyleSheet, ActivityIndicator } from 'react-native';
+import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
 import { useState } from 'react';
+import { Image } from 'expo-image';
 import GlassView from './GlassView';
 
 type Props = {
@@ -31,6 +32,9 @@ export default function SwipeCard({ name, image }: Props) {
               setImageError(true);
               setImageLoading(false);
             }}
+            contentFit="cover"
+            transition={300}
+            cachePolicy="memory-disk"
           />
           {imageError && (
             <Text style={styles.errorText}>Image not available</Text>
@@ -44,12 +48,15 @@ export default function SwipeCard({ name, image }: Props) {
 
 const styles = StyleSheet.create({
   container: {
+    height: 500,
     width: 340,
     padding: 18,
+    alignItems: 'center',
+    backgroundColor: 'rgba(255, 255, 255, 0.04)',
   },
   imageContainer: {
     width: '100%',
-    height: 240,
+    height: 390,
     borderRadius: 14,
     marginBottom: 14,
     backgroundColor: '#1a1a1f',
@@ -73,8 +80,9 @@ const styles = StyleSheet.create({
   },
   title: {
     color: '#FFFFFF',
-    fontSize: 20,
+    fontSize: 30,
     fontWeight: '700',
     textAlign: 'center',
+
   },
 });

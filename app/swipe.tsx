@@ -223,13 +223,7 @@ const styles = StyleSheet.create({
     right: 30,
     zIndex: 10,
   },
-  beatsLogo: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
-    backgroundColor: '#00FF00',
-    opacity: 0.8,
-  },
+ 
   mainTitle: {
     color: '#FFFFFF',
     fontSize: 32,
@@ -246,6 +240,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   cardContent: {
+    height: '70%',
     alignItems: 'center',
   },
   emoji: {
@@ -288,6 +283,7 @@ const styles = StyleSheet.create({
   },
   cardWrapper: {
     flex: 1,
+    
     alignItems: 'center',
     justifyContent: 'center',
   },

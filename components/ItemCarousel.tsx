@@ -52,26 +52,37 @@ export default function ItemCarousel({ title, emoji, items, iconType }: Props) {
 const styles = StyleSheet.create({
   container: {
     marginBottom: 24,
+    backgroundColor: 'rgba(255, 255, 255, 0.04)',
+    borderRadius: 20,
+    overflow: 'hidden',
+    paddingBottom: 8,
   },
   header: {
     paddingHorizontal: 20,
-    marginBottom: 12,
+    paddingTop: 16,
+    paddingBottom: 12,
+    marginBottom: 8,
+    borderBottomWidth: 1,
+    borderBottomColor: 'rgba(255,255,255,0.08)',
   },
   title: {
     fontSize: 16,
     fontWeight: '700',
     color: '#FFFFFF',
-    marginBottom: 4,
+    marginBottom: 0,
   },
   listContainer: {
-    paddingHorizontal: 20,
+    paddingHorizontal: 12,
   },
   listItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: 12,
-    borderBottomWidth: 1,
-    borderBottomColor: 'rgba(255,255,255,0.05)',
+    paddingVertical: 14,
+    paddingHorizontal: 8,
+    marginHorizontal: 4,
+    borderRadius: 12,
+    backgroundColor: 'rgba(255, 255, 255, 0.02)',
+    marginBottom: 4,
   },
   iconCircle: {
     width: 32,

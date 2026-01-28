@@ -57,14 +57,13 @@ export default function ResultsScreen() {
       vegetables: '🥬',
       fruits: '🍎',
       grains: '🌾',
-      proteins: '🍗',
       protein: '🍗',
       dairy: '🥛',
       oils: '🫗',
       spices: '🌶️',
       carb: '🌾',
     };
-    return emojiMap[category.toLowerCase()] || '🍽️';
+    return emojiMap[category.toLowerCase()] ;
   };
 
   const topCategories = getTopCategories();
@@ -98,9 +97,6 @@ export default function ResultsScreen() {
 
   return (
     <View style={styles.container}>
-      <View style={styles.logoContainer}>
-        <View style={styles.beatsLogo} />
-      </View>
 
       {/* MAIN SCROLL VIEW FOR ALL CONTENT */}
       <ScrollView style={styles.mainScroll} showsVerticalScrollIndicator={false}>
@@ -257,42 +253,32 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 20,
   },
-  logoContainer: {
-    position: 'absolute',
-    top: 50,
-    right: 30,
-    zIndex: 10,
-  },
-  beatsLogo: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
-    backgroundColor: '#22C55E',
-    opacity: 0.9,
-  },
+
   title: {
     fontSize: 28,
     fontWeight: '800',
     color: '#FFFFFF',
-    marginBottom: 18,
+    marginBottom: 24,
     letterSpacing: 0.2,
   },
   sectionTitle: {
     fontSize: 18,
     fontWeight: '700',
     color: '#FFFFFF',
-    marginBottom: 12,
-    marginTop: 20,
+    marginBottom: 16,
+    marginTop: 28,
   },
   card: {
-    padding: 18,
-    marginBottom: 18,
+    padding: 20,
+    marginBottom: 24,
+    borderRadius: 24,
+    overflow: 'hidden',
   },
   cardTitle: {
     color: '#FFFFFF',
     fontSize: 16,
     fontWeight: '700',
-    marginBottom: 12,
+    marginBottom: 16,
   },
   dietTypeText: {
     fontSize: 22,
@@ -330,16 +316,20 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
   highlightsSection: {
-    marginBottom: 24,
+    marginBottom: 28,
+    borderRadius: 24,
+    overflow: 'hidden',
   },
   highlightsCarousel: {
     marginHorizontal: -20,
+    paddingHorizontal: 20,
   },
   highlightItem: {
-    marginHorizontal: 8,
+    marginHorizontal: 12,
     alignItems: 'center',
     justifyContent: 'center',
     paddingVertical: 12,
+    paddingHorizontal: 8,
   },
   highlightEmoji: {
     fontSize: 40,
@@ -352,7 +342,10 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   lifestyleSection: {
-    marginBottom: 24,
+    backgroundColor: 'transparent',
+    marginBottom: 28,
+    borderRadius: 24,
+    overflow: 'hidden',
   },
   goalsContainer: {
     gap: 12,
@@ -368,7 +361,6 @@ const styles = StyleSheet.create({
     width: 24,
     height: 24,
     borderRadius: 12,
-    backgroundColor: '#22C55E',
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 12,
@@ -398,7 +390,9 @@ const styles = StyleSheet.create({
     fontSize: 15,
   },
   categoryCarouselWrapper: {
-    marginBottom: 80,
+    marginBottom: 100,
+    borderRadius: 24,
+    overflow: 'hidden',
   },
   categoryRow: {
     flexDirection: 'row',
@@ -423,14 +417,15 @@ const styles = StyleSheet.create({
   },
   categorySlide: {
     paddingHorizontal: 20,
-    paddingVertical: 12,
+    paddingVertical: 16,
   },
   categoryDotsContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    gap: 6,
-    paddingVertical: 12,
+    gap: 8,
+    paddingVertical: 16,
+    marginTop: 8,
   },
   categoryDot: {
     width: 6,

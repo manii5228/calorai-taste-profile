@@ -19,13 +19,13 @@ export default function GlassCard({ children }: Props) {
 
 const styles = StyleSheet.create({
   ios: {
-    backgroundColor: 'rgba(255,255,255,0.1)',
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
     borderRadius: 16,
     padding: 24,
     borderWidth: 1,
     borderColor: 'rgba(255,255,255,0.2)',
     overflow: 'hidden',
-    shadowColor: '#000',
+
     shadowOpacity: 0.35,
     shadowRadius: 20,
     shadowOffset: { width: 0, height: 10 },
