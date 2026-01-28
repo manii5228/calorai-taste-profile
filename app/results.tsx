@@ -97,9 +97,9 @@ export default function ResultsScreen() {
 
   return (
     <View style={styles.container}>
-
       {/* MAIN SCROLL VIEW FOR ALL CONTENT */}
-      <ScrollView style={styles.mainScroll} showsVerticalScrollIndicator={false}>
+      <GlassView intensity={20} radius={0} style={styles.glassScrollContainer}>
+        <ScrollView style={styles.mainScroll} showsVerticalScrollIndicator={false}>
         
         {/* Title */}
         <Text style={styles.title}>Your Taste Profile</Text>
@@ -204,7 +204,8 @@ export default function ResultsScreen() {
           </View>
         </View>
 
-      </ScrollView>
+        </ScrollView>
+      </GlassView>
 
       {/* Footer Buttons - Always at Bottom */}
       <View style={styles.footerButtons}>
@@ -247,6 +248,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#0B0B0F',
+  },
+  glassScrollContainer: {
+    flex: 1,
+    borderRadius: 0,
   },
   mainScroll: {
     flex: 1,

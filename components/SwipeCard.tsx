@@ -34,7 +34,9 @@ export default function SwipeCard({ name, image }: Props) {
             }}
             contentFit="cover"
             transition={300}
-            cachePolicy="memory-disk"
+            cachePolicy="none"
+            priority="high"
+            recyclingKey={image}
           />
           {imageError && (
             <Text style={styles.errorText}>Image not available</Text>
@@ -48,7 +50,7 @@ export default function SwipeCard({ name, image }: Props) {
 
 const styles = StyleSheet.create({
   container: {
-    height: 500,
+    height: 420,
     width: 340,
     padding: 18,
     alignItems: 'center',
@@ -56,7 +58,7 @@ const styles = StyleSheet.create({
   },
   imageContainer: {
     width: '100%',
-    height: 390,
+    height: 320,
     borderRadius: 14,
     marginBottom: 14,
     backgroundColor: '#1a1a1f',
