@@ -12,7 +12,7 @@ import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import { useRouter } from 'expo-router';
 import SwipeActions from '../components/SwipeActions';
 import SwipeIndicator from '../components/SwipeIndicator';
-import { foods } from '../constants/foods';
+import foodsData from '../constants/foods.json';
 import SwipeCard from '../components/SwipeCard';
 import ProgressBar from '../components/ProgressBar';
 
@@ -21,6 +21,8 @@ const SWIPE_VERTICAL_THRESHOLD = height * 0.25;
 const SWIPE_THRESHOLD = width * 0.25;
 
 export default function SwipeScreen() {
+  // Handle foods being either array or object with foods property
+  const foods = Array.isArray(foodsData) ? foodsData : (foodsData as any).foods || [];
   const [index, setIndex] = useState(0);
   const [likes, setLikes] = useState<number[]>([]);
   const [dislikes, setDislikes] = useState<number[]>([]);

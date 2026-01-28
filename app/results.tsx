@@ -2,6 +2,7 @@ import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Dimensions } from
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { foods as foodsData, cuisines as cuisinesData } from '../constants/foods';
 import GlassView from '../components/GlassView';
+import GlassCard from '../components/GlassCard';
 import ItemCarousel from '../components/ItemCarousel';
 import { useState } from 'react';
 import { buildTasteProfile } from '../utils/tasteProfiler';

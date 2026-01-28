@@ -15,15 +15,12 @@ export default function GlassView({ children, intensity = 20, radius = 16, style
       tint="dark"
       style={[styles.blurContainer, { borderRadius: radius }, style]}
     >
-      {/* First glass layer - provides base glass effect */}
-      <View style={[styles.glassLayer1, { borderRadius: radius }]}>
-        {/* Second glass layer - adds depth and shimmer */}
-        <View style={[styles.glassLayer2, { borderRadius: radius }]}>
-          {/* Content wrapper */}
-          <View style={styles.contentWrapper}>
-            {children}
-          </View>
-        </View>
+      {/* Shimmer effect overlay */}
+      <View style={[styles.shimmerOverlay, { borderRadius: radius }]} pointerEvents="none" />
+      
+      {/* Content container - allows images to show through */}
+      <View style={styles.contentContainer}>
+        {children}
       </View>
     </BlurView>
   );
@@ -32,21 +29,22 @@ export default function GlassView({ children, intensity = 20, radius = 16, style
 const styles = StyleSheet.create({
   blurContainer: {
     overflow: 'hidden',
-    borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.15)',
+    borderWidth: 1.5,
+    borderColor: 'rgba(255, 255, 255, 0.25)',
+    backgroundColor: 'rgba(255, 255, 255, 0.05)',
   },
-  glassLayer1: {
+  shimmerOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
     backgroundColor: 'rgba(255, 255, 255, 0.08)',
-    padding: 0,
-    overflow: 'hidden',
-  },
-  glassLayer2: {
-    backgroundColor: 'rgba(255, 255, 255, 0.04)',
-    overflow: 'hidden',
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.08)',
+    borderColor: 'rgba(255, 255, 255, 0.12)',
   },
-  contentWrapper: {
+  contentContainer: {
     flex: 1,
+    overflow: 'visible',
   },
 });

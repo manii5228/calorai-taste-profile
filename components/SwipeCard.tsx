@@ -1,5 +1,5 @@
 import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Image } from 'expo-image';
 import GlassView from './GlassView';
 
@@ -11,6 +11,34 @@ type Props = {
 export default function SwipeCard({ name, image }: Props) {
   const [imageLoading, setImageLoading] = useState(true);
   const [imageError, setImageError] = useState(false);
+  const [retryCount, setRetryCount] = useState(0);
+
+  useEffect(() => {
+    // Reset loading state when image URL changes
+    setImageLoading(true);
+    setImageError(false);
+    setRetryCount(0);
+  }, [image]);
+
+  const handleImageError = (error: any) => {
+    console.error('Image loading failed:', error, 'for URL:', image);
+    
+    // Retry up to 2 times
+    if (retryCount < 2) {
+      setRetryCount(prev => prev + 1);
+      setImageLoading(true);
+      return;
+    }
+    
+    setImageError(true);
+    setImageLoading(false);
+  };
+
+  const handleImageLoad = () => {
+    setImageLoading(false);
+    setImageError(false);
+    setRetryCount(0);
+  };
 
   return (
     <GlassView intensity={30} radius={24}>
@@ -24,22 +52,23 @@ export default function SwipeCard({ name, image }: Props) {
             />
           )}
           <Image
+            key={`${image}-${retryCount}`}
             source={{ uri: image }}
-            style={styles.image}
+            style={[styles.image, imageError && { opacity: 0 }]}
             onLoadStart={() => setImageLoading(true)}
-            onLoadEnd={() => setImageLoading(false)}
-            onError={() => {
-              setImageError(true);
-              setImageLoading(false);
-            }}
+            onLoadEnd={handleImageLoad}
+            onError={handleImageError}
             contentFit="cover"
             transition={300}
-            cachePolicy="none"
+            cachePolicy="memory-disk"
             priority="high"
-            recyclingKey={image}
           />
           {imageError && (
-            <Text style={styles.errorText}>Image not available</Text>
+            <View style={styles.errorContainer}>
+              <Text style={styles.errorText}>📸</Text>
+              <Text style={styles.errorText}>Image not available</Text>
+              <Text style={styles.errorSubtext}>{name}</Text>
+            </View>
           )}
         </View>
         <Text style={styles.title}>{name}</Text>
@@ -75,16 +104,29 @@ const styles = StyleSheet.create({
     position: 'absolute',
     zIndex: 10,
   },
+  errorContainer: {
+    position: 'absolute',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '100%',
+    height: '100%',
+  },
   errorText: {
     color: '#EF4444',
     fontSize: 14,
     textAlign: 'center',
+  },
+  errorSubtext: {
+    color: '#9CA3AF',
+    fontSize: 12,
+    textAlign: 'center',
+    marginTop: 8,
   },
   title: {
     color: '#FFFFFF',
     fontSize: 30,
     fontWeight: '700',
     textAlign: 'center',
-
   },
 });
+

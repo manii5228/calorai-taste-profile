@@ -1,9 +1,10 @@
 import { View, Text, StyleSheet } from 'react-native';
+import { Image } from 'expo-image';
 
 type Props = {
   title: string;
   emoji: string;
-  items: { id: number; name: string }[];
+  items: { id: number; name: string; image?: string }[];
   iconType: 'heart' | 'checkmark' | 'cross';
 };
 
@@ -36,11 +37,20 @@ export default function ItemCarousel({ title, emoji, items, iconType }: Props) {
       <View style={styles.listContainer}>
         {items.map((item) => (
           <View key={item.id} style={styles.listItem}>
-            <View style={styles.iconCircle}>
-              <Text style={[styles.icon, { color: '#FFFFFF' }]}>
-                {getIcon()}
-              </Text>
-            </View>
+            {item.image ? (
+              <Image
+                source={{ uri: item.image }}
+                style={styles.itemImage}
+                contentFit="cover"
+                cachePolicy="memory-disk"
+              />
+            ) : (
+              <View style={styles.iconCircle}>
+                <Text style={[styles.icon, { color: '#FFFFFF' }]}>
+                  {getIcon()}
+                </Text>
+              </View>
+            )}
             <Text style={styles.itemName}>{item.name}</Text>
           </View>
         ))}
@@ -91,6 +101,12 @@ const styles = StyleSheet.create({
     backgroundColor: '#3B82F6',
     justifyContent: 'center',
     alignItems: 'center',
+    marginRight: 12,
+  },
+  itemImage: {
+    width: 40,
+    height: 40,
+    borderRadius: 8,
     marginRight: 12,
   },
   icon: {
